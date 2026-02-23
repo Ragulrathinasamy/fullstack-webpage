@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>jQuery Unique Example</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body {
+            font-family: Arial;
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            padding: 8px;
+            margin: 5px;
+            background-color: lightgray;
+            cursor: pointer;
+        }
+
+        .completed {
+            text-decoration: line-through;
+            background-color: lightgreen;
+        }
+    </style>
+</head>
+<body>
+
+    <h2 id="heading">My Task List</h2>
+
+    <input type="text" id="taskInput" placeholder="Enter a task">
+    <button id="addTask">Add Task</button>
+
+    <ul id="taskList">
+        <li>Learn jQuery</li>
+        <li>Practice Coding</li>
+    </ul>
+
+    <script>
+        $(document).ready(function(){
+
+            // Selector + Manipulation
+            $("#addTask").click(function(){
+                var newTask = $("#taskInput").val();
+
+                if(newTask !== ""){
+                    $("#taskList").append("<li>" + newTask + "</li>");
+                    $("#taskInput").val("");
+                }
+            });
+
+            // Traversal + Manipulation
+            $("#taskList").on("click", "li", function(){
+                $(this).toggleClass("completed");
+            });
+
+            // Extra Selector Example
+            $("#heading").hover(function(){
+                $(this).css("color", "blue");
+            });
+
+        });
+    </script>
+
+</body>
+</html>
