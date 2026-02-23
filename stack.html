@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stack Visualizer with Limit</title>
+<style>
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: #f0f2f5;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 50px;
+    }
+    h1 { color: #333; }
+    .config-section {
+        background: #fff;
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .stack-container {
+        margin-top: 20px;
+        display: flex;
+        flex-direction: column-reverse;
+        align-items: center;
+        min-height: 250px;
+        width: 220px;
+        border: 3px solid #333;
+        border-top: none;
+        border-radius: 0 0 10px 10px;
+        background: #fff;
+        padding: 10px;
+    }
+    .stack-item {
+        width: 180px;
+        margin: 3px 0;
+        padding: 12px;
+        text-align: center;
+        background: #4caf50;
+        color: white;
+        border-radius: 5px;
+        font-weight: bold;
+        animation: slideIn 0.3s ease-out;
+    }
+    @keyframes slideIn {
+        from { transform: translateY(-20px); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
+    }
+    .controls {
+        margin-top: 30px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+    }
+    input {
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        width: 150px;
+    }
+    button {
+        padding: 10px 20px;
+        cursor: pointer;
+        border: none;
+        border-radius: 5px;
+        color: white;
+        font-weight: bold;
+        transition: 0.2s;
+    }
+    button:hover { opacity: 0.8; }
+    .push-btn { background: #4caf50; }
+    .pop-btn { background: #f44336; }
+    .limit-btn { background: #673ab7; }
+    .clear-btn { background: #ff9800; }
+    .message {
+        margin-top: 20px;
+        height: 20px;
+        font-weight: bold;
+    }
+    .error { color: #f44336; }
+    .success { color: #4caf50; }
+</style>
+</head>
+<body>
+
+<h1>Stack </h1>
+<button style=background-color="#ff4000" onclick="window.print()">save as pdf</button>
+<div class="config-section">
+    <input type="number" id="stackLimit" placeholder="Enter Max Limit">
+    <button class="limit-btn" onclick="setLimit()">Set limit</button>
+</div>
+
+<div class="stack-container" id="stackContainer"></div>
+
+<div class="controls">
+    <div>
+        <input type="number" id="stackInput" placeholder="Value to push">
+        <button class="push-btn" onclick="pushStack()">Push</button>
+    </div>
+    <div>
+        <button class="pop-btn" onclick="popStack()">Pop</button>
+        <button class="clear-btn" onclick="clearStack()">Clear All</button>
+    </div>
+</div>
+
+<div class="message" id="message"></div>
+
+<script>
+    class Stack {
+        constructor() {
+            this.items = [];
+            this.limit = Infinity;
+        }
+        push(element) { this.items.push(element); }
+        pop() { return this.items.pop(); }
+        size() { return this.items.length; }
+        clear() { this.items = []; }
+        getItems() { return this.items; }
+    }
+
+    const stack = new Stack();
+    const stackContainer = document.getElementById('stackContainer');
+    const message = document.getElementById('message');
+    const stackInput = document.getElementById('stackInput');
+    const stackLimitInput = document.getElementById('stackLimit');
+
+    function setLimit() {
+        const val = parseInt(stackLimitInput.value);
+        if (val > 0) {
+            stack.limit = val;
+            showMessage(`Stack capacity set to ${val}`, "success");
+        } else {
+            showMessage("Please enter a valid limit!", "error");
+        }
+    }
+
+    function showMessage(msg, type) {
+        message.innerText = msg;
+        message.className = "message " + type;
+    }
+
+    function renderStack() {
+        stackContainer.innerHTML = '';
+        stack.getItems().forEach(item => {
+            const div = document.createElement('div');
+            div.className = 'stack-item';
+            div.innerText = item;
+            stackContainer.appendChild(div);
+        });
+    }
+
+    function pushStack() {
+        const value = stackInput.value;
+        
+        // LIMIT VALIDATION
+        if (stack.size() >= stack.limit) {
+            showMessage(`Stack Overflow! Cannot exceed limit of ${stack.limit}`, "error");
+            return;
+        }
+
+        if(value === '') {
+            showMessage("Please enter a value!", "error");
+            return;
+        }
+
+        stack.push(value);
+        showMessage(`${value} added to stack`, "success");
+        stackInput.value = '';
+        renderStack();
+    }
+
+    function popStack() {
+        if(stack.size() === 0) {
+            showMessage("Stack Underflow! No items to remove.", "error");
+            return;
+        }
+        const popped = stack.pop();
+        showMessage(`${popped} removed from stack`, "success");
+        renderStack();
+    }
+
+    function clearStack() {
+        stack.clear();
+        showMessage("Stack cleared!", "success");
+        renderStack();
+    }
+</script>
+
+</body>
+</html>
