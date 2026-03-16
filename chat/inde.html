@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Slide Navigation Demo</title>
+    <style>
+        :root {
+            --bg: #050505;
+            --primary: #00ff88;
+            --secondary: #6366f1;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+
+        body {
+            background-color: var(--bg);
+            color: white;
+            overflow: hidden; /* Prevents scroll during transitions */
+        }
+
+        /* Page Container */
+        .page {
+            position: absolute;
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: transform 0.8s cubic-bezier(0.7, 0, 0.3, 1), opacity 0.5s;
+        }
+
+        /* Home Page Styling */
+        #home {
+            background: radial-gradient(circle at center, #111, #050505);
+        }
+
+        /* Next Page Styling */
+        #details {
+            background: linear-gradient(135deg, #050505 0%, #1a1a2e 100%);
+            transform: translateX(100%); /* Hidden to the right */
+            opacity: 0;
+        }
+
+        /* Active Classes */
+        .page.active {
+            transform: translateX(0);
+            opacity: 1;
+        }
+
+        .page.exit {
+            transform: translateX(-100%);
+            opacity: 0;
+        }
+
+        h1 { font-size: 3rem; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 5px; }
+
+        .btn {
+            padding: 15px 40px;
+            border: 2px solid var(--primary);
+            background: transparent;
+            color: var(--primary);
+            cursor: pointer;
+            font-weight: bold;
+            text-transform: uppercase;
+            transition: 0.3s;
+            border-radius: 5px;
+        }
+
+        .btn:hover {
+            background: var(--primary);
+            color: black;
+            box-shadow: 0 0 20px var(--primary);
+        }
+
+        .back-btn { border-color: var(--secondary); color: var(--secondary); }
+        .back-btn:hover { background: var(--secondary); color: white; box-shadow: 0 0 20px var(--secondary); }
+
+        .content-box {
+            max-width: 600px;
+            text-align: center;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- PAGE 1: HOME -->
+    <div id="home" class="page active">
+
+
+        <h1>Welcome</h1>
+        <p style="color: #666; margin-bottom: 30px;">MY CHAT-ROOM SYSTEM</p>
+        
+
+<button class="btn" onclick="window.location.href='index.html'">Explore Project →</button>
+
+    </div>
+
+    <!-- PAGE 2: DETAILS -->
+    <div id="details" class="page">
+        <div class="content-box">
+            <h1 style="color: var(--secondary);">Discovery</h1>
+            <p style="margin-bottom: 40px; line-height: 1.8;">
+                You have successfully moved to the next page! This transition uses CSS 
+                <b>transform</b> and <b>opacity</b> to create a seamless app-like feel 
+                without refreshing the browser.
+            </p>
+            <button class="btn back-btn" onclick="navigateTo('home')">← Go Back</button>
+        </div>
+    </div>
+
+    <script>
+        function navigateTo(pageId) {
+            const home = document.getElementById('home');
+            const details = document.getElementById('details');
+
+            if (pageId === 'details') {
+                home.classList.remove('active');
+                home.classList.add('exit');
+                details.classList.add('active');
+            } else {
+                details.classList.remove('active');
+                home.classList.remove('exit');
+                home.classList.add('active');
+            }
+        }
+    </script>
+
+</body>
+</html>
