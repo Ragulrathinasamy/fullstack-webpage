@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My JS Diary</title>
+    <style>
+        body { font-family: sans-serif; max-width: 500px; margin: 20px auto; padding: 20px; border: 1px solid #ddd; border-radius: 8px; }
+        textarea { width: 100%; height: 100px; margin-bottom: 10px; }
+        .entry { background: #f9f9f9; padding: 10px; margin-top: 10px; border-left: 4px solid #007bff; position: relative; }
+        .delete-btn { position: absolute; right: 10px; top: 10px; color: red; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h2>📓 My Personal Diary</h2>
+    <textarea id="diaryInput" placeholder="What's on your mind?"></textarea>
+    <button onclick="saveEntry()">Save Entry</button>
+    <div id="entriesContainer"></div>
+
+    <script>
+        const container = document.getElementById('entriesContainer');
+        const input = document.getElementById('diaryInput');
+
+        // Load existing entries from LocalStorage
+        function loadEntries() {
+            const entries = JSON.parse(localStorage.getItem('myDiary')) || [];
+            container.innerHTML = '';
+            entries.forEach((entry, index) => {
+                const div = document.createElement('div');
+                div.className = 'entry';
+                div.innerHTML = `<strong>${entry.date}</strong><br>${entry.text} 
+                                 <span class="delete-btn" onclick="deleteEntry(${index})">×</span>`;
+                container.appendChild(div);
+            });
+        }
+
+        // Save a new entry to browser memory
+        function saveEntry() {
+            if (!input.value.trim()) return;
+            const entries = JSON.parse(localStorage.getItem('myDiary')) || [];
+            entries.unshift({
+                text: input.value,
+                date: new Date().toLocaleString()
+            });
+            localStorage.setItem('myDiary', JSON.stringify(entries));
+            input.value = '';
+            loadEntries();
+        }
+
+        // Remove an entry
+        function deleteEntry(index) {
+            const entries = JSON.parse(localStorage.getItem('myDiary'));
+            entries.splice(index, 1);
+            localStorage.setItem('myDiary', JSON.stringify(entries));
+            loadEntries();
+        }
+
+        loadEntries(); // Initial load
+    </script>
+</body>
+</html>
